@@ -22,11 +22,11 @@ Standard C++ forces a rigid choice between two memory lifetime models:
 ## Architecture & Lifecycles
 
 ```text
-  [ Local Stack Scope ]                          [ Thread Escape Event ]
+  [ Local Stack Scope ]                         [ Thread Escape Event ]
   +-------------------+                          +-------------------+
   | hl::local<T>      |                          | hl::borrow<T>     |
   |  +--------------+ |                          |  +--------------+ |
-  |  | Inline Storage| |                          |  | Control Block| |
+  |  | Inline Storage||                          |  | Control Block| |
   |  | [ Payload T ]| |                          |  | ref_count: 2 | |
   |  +--------------+ |                          |  +--------------+ |
   +---------+---------+                          +---------+---------+
@@ -38,7 +38,7 @@ Standard C++ forces a rigid choice between two memory lifetime models:
                                 v
                [ Automatic Heap Hoisting Transition ]
                +----------------------------------+
-               | Heap Payload: new T(move(stack))|
+               | Heap Payload: new T(move(stack)) |
                | active_ptr -> [ Heap Payload ]   |
                | is_hoisted -> true               |
                +----------------------------------+
